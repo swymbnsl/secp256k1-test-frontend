@@ -16,7 +16,7 @@ declare global {
 }
 
 function App() {
-  const [metamaskConnected, setMetamaskConnected] = useState(false)
+  const [walletConnected, setWalletConnected] = useState(false)
   const [ethereumAddress, setEthereumAddress] = useState<string>("")
   const [message, setMessage] = useState("")
   const [signature, setSignature] = useState<string>("")
@@ -27,49 +27,56 @@ function App() {
   const [copyStates, setCopyStates] = useState<Record<string, boolean>>({})
 
   useEffect(() => {
-    checkMetamaskConnection()
+    checkWalletConnection()
   }, [])
 
-  const checkMetamaskConnection = async () => {
+  const checkWalletConnection = async () => {
     if (typeof window.ethereum !== "undefined") {
       try {
         const accounts = await window.ethereum.request({
           method: "eth_accounts",
         })
         if (accounts.length > 0) {
-          setMetamaskConnected(true)
+          setWalletConnected(true)
           setEthereumAddress(accounts[0])
         }
       } catch (error) {
-        console.error("Error checking MetaMask connection:", error)
+        console.error("Error checking wallet connection:", error)
       }
     }
   }
 
-  const connectMetamask = async () => {
+  const connectWallet = async () => {
     if (typeof window.ethereum !== "undefined") {
       try {
         const accounts = await window.ethereum.request({
           method: "eth_requestAccounts",
         })
-        setMetamaskConnected(true)
+        setWalletConnected(true)
         setEthereumAddress(accounts[0])
       } catch (error) {
-        console.error("Error connecting to MetaMask:", error)
+        console.error("Error connecting to wallet:", error)
       }
     } else {
-      alert("MetaMask is not installed!")
+      alert(
+        "No Ethereum wallet detected! Please install MetaMask, WalletConnect, or another Ethereum wallet."
+      )
     }
   }
 
   const signMessage = async () => {
-    if (!metamaskConnected) {
-      alert("Please connect MetaMask first")
+    if (!walletConnected) {
+      alert("Please connect your Ethereum wallet first")
       return
     }
 
     if (!window.ethereum) {
-      alert("MetaMask is not available")
+      alert("No Ethereum wallet available")
+      return
+    }
+
+    if (!message.trim()) {
+      alert("Please enter a message to sign")
       return
     }
 
@@ -100,6 +107,7 @@ function App() {
       console.log("recovery_id:", recovery_id)
     } catch (error) {
       console.error("Error signing message:", error)
+      alert("Failed to sign message. Please try again.")
     } finally {
       setLoading(false)
     }
@@ -122,10 +130,11 @@ function App() {
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold text-white mb-4">
-            MetaMask Signature Generator
+            Ethereum Signature Generator
           </h1>
           <p className="text-lg text-gray-300">
-            Sign a message with MetaMask and get signature components
+            Sign messages with any Ethereum wallet and extract signature
+            components
           </p>
         </div>
 
@@ -134,13 +143,13 @@ function App() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-white">
                 <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
-                Connect MetaMask
+                Connect Ethereum Wallet
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              {!metamaskConnected ? (
-                <Button onClick={connectMetamask} className="w-full">
-                  Connect MetaMask
+              {!walletConnected ? (
+                <Button onClick={connectWallet} className="w-full">
+                  Connect Wallet
                 </Button>
               ) : (
                 <div className="flex items-center gap-3">
@@ -186,7 +195,7 @@ function App() {
             <CardContent className="space-y-6">
               <Button
                 onClick={signMessage}
-                disabled={!metamaskConnected || loading}
+                disabled={!walletConnected || loading || !message.trim()}
                 className="w-full"
               >
                 {loading ? "Signing..." : "Sign Message"}

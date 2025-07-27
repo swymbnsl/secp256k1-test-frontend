@@ -1,4 +1,4 @@
-# MetaMask Signature Generator
+# Ethereum Signature Generator
 
 A modern React application that allows users to sign messages with MetaMask and extract signature components for cross-chain verification. Built with TypeScript, Tailwind CSS, and shadcn/ui components.
 
@@ -15,7 +15,7 @@ The application extracts and displays the following signature components:
 ## Prerequisites
 
 - Node.js (v16 or higher)
-- MetaMask browser extension
+- Any Ethereum wallet (MetaMask, WalletConnect, Coinbase Wallet, etc.)
 - Modern web browser with ES6+ support
 
 ## Installation
@@ -43,10 +43,10 @@ npm run dev
 
 ## How to Use
 
-### Step 1: Connect MetaMask
+### Step 1: Connect Ethereum Wallet
 
-- Click the "Connect MetaMask" button
-- Approve the connection in your MetaMask extension
+- Click the "Connect Wallet" button
+- Approve the connection in your Ethereum wallet
 - Your wallet address will be displayed with a green "Connected" badge
 
 ### Step 2: Enter Message
@@ -57,7 +57,7 @@ npm run dev
 ### Step 3: Sign Message
 
 - Click the "Sign Message" button
-- Approve the signature request in MetaMask
+- Approve the signature request in your wallet
 - The app will display all signature components in organized sections
 
 ### Step 4: Copy Components
@@ -83,7 +83,7 @@ npm run dev
 ### Blockchain Integration
 
 - **ethers.js** - Ethereum interaction and signature processing
-- **MetaMask** - Wallet connection and signing
+- **EIP-1193** - Standard Ethereum provider interface
 
 ### Development Tools
 
@@ -105,9 +105,9 @@ src/
 
 ## Signature Processing
 
-The application processes MetaMask signatures to extract the components needed for cross-chain verification:
+The application processes Ethereum signatures to extract the components needed for cross-chain verification:
 
-1. **Receives signature** from MetaMask in hexadecimal format
+1. **Receives signature** from any Ethereum wallet in hexadecimal format
 2. **Converts to bytes** using ethers.js utilities
 3. **Extracts components**:
    - `r`: First 32 bytes (signature R component)
@@ -162,9 +162,9 @@ The application uses a modern dark theme with:
 
 ## Troubleshooting
 
-### MetaMask Issues
+### Wallet Connection Issues
 
-- Ensure MetaMask is installed and unlocked
+- Ensure your Ethereum wallet is installed and unlocked
 - Try refreshing the page if connection fails
 - Check browser console for detailed error messages
 - Make sure you're on a supported network
